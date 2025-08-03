@@ -1,0 +1,23 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto
+
+# Set specific line endings
+*.js     text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.sh     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+
+# Keep Windows-style for batch files
+*.bat    text eol=crlf
+
+# Binary files (do not modify line endings)
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
