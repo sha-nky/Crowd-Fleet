@@ -34,7 +34,8 @@ export const loadGoogleMaps = () => {
     // Create script element
     const script = document.createElement('script');
     // Use a placeholder API key - in a real app, this should come from backend
-    const apiKey = 'AIzaSyBDXZORqJV_a3XJabuyFn_JcZcv0HW8TxI';
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) throw new Error('Google Maps API key not found. Check your .env file.');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,directions&callback=Function.prototype`;
     script.async = true;
     script.defer = true;
