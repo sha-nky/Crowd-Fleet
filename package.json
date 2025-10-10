@@ -1,0 +1,27 @@
+{
+  "name": "crowd-fleet",
+  "version": "1.0.0",
+  "description": "AI-Driven Delivery Optimization Platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "node integration-test.js",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run dev",
+    "start:route-service": "cd microservices && python route_optimizer.py",
+    "start:risk-service": "cd microservices && python risk_detector.py",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:route-service\" \"npm run start:risk-service\"",
+    "install:all": "concurrently \"cd backend && npm install\" \"cd frontend && npm install\" \"cd microservices && pip install -r requirements.txt\""
+  },
+  "keywords": [
+    "delivery",
+    "optimization",
+    "crowdsourcing",
+    "logistics",
+    "ai"
+  ],
+  "author": "CrowdFleet Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

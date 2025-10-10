@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     lat: Number,
     lng: Number
   },
-  availability: { type: Boolean, default: true }, // Specific to agents
+  availability: { type: Boolean, default: false }, // Specific to agents
   createdAt: { type: Date, default: Date.now }
 });
 
