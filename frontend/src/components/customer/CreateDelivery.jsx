@@ -188,7 +188,7 @@ const CreateDelivery = () => {
         return;
       }
 
-      // Convert numeric values
+      // Convert numeric values and properly map package details
       const deliveryData = {
         pickupLocation: {
           address: formData.pickupLocation.address,
@@ -203,7 +203,8 @@ const CreateDelivery = () => {
         packageDetails: {
           weightKg: parseFloat(formData.packageDetails.weight) || 0,
           size: `${parseFloat(formData.packageDetails.dimensions.length) || 0}x${parseFloat(formData.packageDetails.dimensions.width) || 0}x${parseFloat(formData.packageDetails.dimensions.height) || 0}`,
-          fragile: false // Default value
+          fragile: false, // Default value
+          description: formData.packageDetails.description || ''
         }
       };
 

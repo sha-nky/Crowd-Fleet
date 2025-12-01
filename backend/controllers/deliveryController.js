@@ -144,7 +144,7 @@ const updateDeliveryStatus = async (req, res) => {
       });
     }
 
-    // If status is being updated to 'delivered', verify agent is within 200m of dropoff
+    // If status is being updated to 'delivered', verify agent is within 100m of dropoff
     if (status === 'delivered') {
       // Check if agent location is provided
       if (!agentLocation || !agentLocation.lat || !agentLocation.lng) {
@@ -159,10 +159,10 @@ const updateDeliveryStatus = async (req, res) => {
         delivery.dropoffLocation.lat, delivery.dropoffLocation.lng
       );
 
-      // Check if agent is within 200 meters of dropoff
-      if (distance > 200) {
+      // Check if agent is within 100 meters of dropoff
+      if (distance > 100) {
         return res.status(400).json({ 
-          message: `Agent is ${Math.round(distance)} meters from dropoff point. Must be within 200 meters to mark as delivered.` 
+          message: `Agent is ${Math.round(distance)} meters from dropoff point. Must be within 100 meters to mark as delivered.` 
         });
       }
     }

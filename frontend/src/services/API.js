@@ -135,29 +135,13 @@ export const getAgentPerformance = async () => {
   });
 };
 
-// Risk APIs
-export const createRiskAlert = async (riskData) => {
-  return await commonrequest("POST", `${BACKEND_URL}/api/risk/alerts`, riskData, {
-    Authorization: `Bearer ${localStorage.getItem('token')}`
-  });
-};
-
-export const getAllRiskAlerts = async () => {
-  return await commonrequest("GET", `${BACKEND_URL}/api/risk/alerts`);
-};
-
-export const getNearbyRiskAlerts = async (params) => {
-  const queryString = new URLSearchParams(params).toString();
-  return await commonrequest("GET", `${BACKEND_URL}/api/risk/nearby?${queryString}`);
-};
-
-export const getDeliveryAffectedByRisks = async () => {
-  return await commonrequest("GET", `${BACKEND_URL}/api/risk/affecting-deliveries`, null, {
-    Authorization: `Bearer ${localStorage.getItem('token')}`
-  });
-};
-
 // Admin APIs
+export const getRecentActivities = async () => {
+  return await commonrequest("GET", `${BACKEND_URL}/api/admin/activities`, null, {
+    Authorization: `Bearer ${localStorage.getItem('token')}`
+  });
+};
+
 export const getAllUsers = async () => {
   return await commonrequest("GET", `${BACKEND_URL}/api/admin/users`, null, {
     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -178,6 +162,28 @@ export const updateUserRole = async (userId, roleData) => {
 
 export const deleteUser = async (userId) => {
   return await commonrequest("DELETE", `${BACKEND_URL}/api/admin/users/${userId}`, null, {
+    Authorization: `Bearer ${localStorage.getItem('token')}`
+  });
+};
+
+// Risk APIs
+export const createRiskAlert = async (riskData) => {
+  return await commonrequest("POST", `${BACKEND_URL}/api/risk/alerts`, riskData, {
+    Authorization: `Bearer ${localStorage.getItem('token')}`
+  });
+};
+
+export const getAllRiskAlerts = async () => {
+  return await commonrequest("GET", `${BACKEND_URL}/api/risk/alerts`);
+};
+
+export const getNearbyRiskAlerts = async (params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return await commonrequest("GET", `${BACKEND_URL}/api/risk/nearby?${queryString}`);
+};
+
+export const getDeliveryAffectedByRisks = async () => {
+  return await commonrequest("GET", `${BACKEND_URL}/api/risk/affecting-deliveries`, null, {
     Authorization: `Bearer ${localStorage.getItem('token')}`
   });
 };

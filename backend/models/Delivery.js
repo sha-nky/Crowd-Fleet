@@ -21,7 +21,8 @@ const deliverySchema = new mongoose.Schema({
   packageDetails: {
     weightKg: Number,
     size: String,
-    fragile: Boolean
+    fragile: Boolean,
+    description: String
   },
   price: Number,
   deliveryTimeEstimate: String,

@@ -22,7 +22,8 @@ const {
   getAllUsers,
   getAllDeliveries,
   updateUserRole,
-  deleteUser
+  deleteUser,
+  getRecentActivities
 } = require('../controllers');
 
 const { auth, authorizeRoles } = require('../middleware/authMiddleware');
@@ -67,6 +68,7 @@ router.get('/api/risk/affecting-deliveries', auth, authorizeRoles('admin'), getD
 // Admin routes
 router.get('/api/admin/users', auth, authorizeRoles('admin'), getAllUsers);
 router.get('/api/admin/deliveries', auth, authorizeRoles('admin'), getAllDeliveries);
+router.get('/api/admin/activities', auth, authorizeRoles('admin'), getRecentActivities);
 router.put('/api/admin/users/:userId/role', auth, authorizeRoles('admin'), updateUserRole);
 router.delete('/api/admin/users/:userId', auth, authorizeRoles('admin'), deleteUser);
 

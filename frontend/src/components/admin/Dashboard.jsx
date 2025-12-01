@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDashboardStats } from '../../services/API';
+import { getDashboardStats, getRecentActivities } from '../../services/API';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -11,11 +11,13 @@ const AdminDashboard = () => {
     availableAgents: 0,
     recentRiskAlerts: 0
   });
+  const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     fetchDashboardStats();
+    fetchRecentActivities();
   }, []);
 
   const fetchDashboardStats = async () => {
@@ -25,7 +27,17 @@ const AdminDashboard = () => {
     } catch (err) {
       setError('Failed to fetch dashboard stats');
       console.error(err);
-    } finally {
+    }
+  };
+
+  const fetchRecentActivities = async () => {
+    try {
+      const response = await getRecentActivities();
+      setActivities(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch recent activities');
+      console.error(err);
       setLoading(false);
     }
   };
@@ -49,6 +61,17 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const activityTime = new Date(timestamp);
+    const diffInMinutes = Math.floor((now - activityTime) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
+    return `${Math.floor(diffInMinutes / 1440)} days ago`;
+  };
 
   if (loading) {
     return (
@@ -120,47 +143,29 @@ const AdminDashboard = () => {
             </div>
             <div className="px-4 py-5 sm:px-6">
               <div className="flow-root">
-                <ul className="divide-y divide-gray-200">
-                  <li className="py-4">
-                    <div className="flex space-x-3">
-                      <div className="flex-shrink-0">
-                        <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">D</span>
+                {activities.length > 0 ? (
+                  <ul className="divide-y divide-gray-200">
+                    {activities.map((activity) => (
+                      <li key={activity.id} className="py-4">
+                        <div className="flex space-x-3">
+                          <div className="flex-shrink-0">
+                            <div className={`h-8 w-8 rounded-full ${activity.iconColor} flex items-center justify-center`}>
+                              <span className="text-white text-xs font-bold">{activity.icon}</span>
+                            </div>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm text-gray-800">{activity.text}</p>
+                            <p className="text-sm text-gray-500">{formatTimeAgo(activity.timestamp)}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-gray-800">New delivery request created</p>
-                        <p className="text-sm text-gray-500">2 minutes ago</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-4">
-                    <div className="flex space-x-3">
-                      <div className="flex-shrink-0">
-                        <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">A</span>
-                        </div>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-gray-800">Agent assigned to delivery</p>
-                        <p className="text-sm text-gray-500">15 minutes ago</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-4">
-                    <div className="flex space-x-3">
-                      <div className="flex-shrink-0">
-                        <div className="h-8 w-8 rounded-full bg-yellow-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">R</span>
-                        </div>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-gray-800">New risk alert detected</p>
-                        <p className="text-sm text-gray-500">1 hour ago</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-gray-500">No recent activities</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

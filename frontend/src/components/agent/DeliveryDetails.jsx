@@ -353,6 +353,13 @@ const DeliveryDetails = () => {
   };
 
   const markDeliveryAsDelivered = async () => {
+    // Check if we can proceed with marking as delivered
+    if (distanceToDropoff === null || distanceToDropoff > 100) {
+      // Don't show error if not within range, just prevent the action
+      // The button should already be disabled in this case
+      return;
+    }
+    
     try {
       // First, get the current agent position
       let currentPosition = agentPosition;
@@ -932,15 +939,17 @@ const DeliveryDetails = () => {
         return;
       }
       
-      // For delivered status, check if agent is within 200m of dropoff
+      // For delivered status, check if agent is within 100m of dropoff
       if (newStatus === 'delivered') {
         if (distanceToDropoff === null) {
-          setError('Unable to verify location. Please ensure location services are enabled.');
+          // Don't show error if location services are disabled, just prevent the action
+          // The button should already be disabled in this case
           return;
         }
         
-        if (distanceToDropoff > 200) {
-          setError(`You are ${Math.round(distanceToDropoff)} meters from the dropoff point. You must be within 200 meters to mark as delivered.`);
+        if (distanceToDropoff > 100) {
+          // Don't show error if not within range, just prevent the action
+          // The button should already be disabled in this case
           return;
         }
       }
@@ -1119,7 +1128,7 @@ const DeliveryDetails = () => {
                   <dt className="text-sm font-medium text-gray-500">Distance to Dropoff</dt>
                   <dd className="mt-1 text-sm text-gray-900">
                     {Math.round(distanceToDropoff)} meters
-                    {distanceToDropoff <= 200 && (
+                    {distanceToDropoff <= 100 && (
                       <span className="ml-2 text-green-600">✓ Within delivery range</span>
                     )}
                   </dd>
@@ -1188,7 +1197,7 @@ const DeliveryDetails = () => {
             </div>
           ) : (
             <div className="flex flex-wrap gap-3">
-              {delivery.status !== 'assigned' && (
+              {delivery.status !== 'assigned' && delivery.status !== 'in_transit' && (
                 <button
                   onClick={() => handleStatusUpdate('assigned')}
                   disabled={updating}
@@ -1209,15 +1218,15 @@ const DeliveryDetails = () => {
               {delivery.status !== 'delivered' && (
                 <button
                   onClick={markDeliveryAsDelivered}
-                  disabled={updating || (distanceToDropoff !== null && distanceToDropoff > 200)}
-                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 ${
-                    distanceToDropoff !== null && distanceToDropoff > 200
+                  disabled={updating || (distanceToDropoff !== null && distanceToDropoff > 100)}
+                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    updating || (distanceToDropoff !== null && distanceToDropoff > 100)
                       ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
                   }`}
                   title={
-                    distanceToDropoff !== null && distanceToDropoff > 200
-                      ? `You are ${Math.round(distanceToDropoff)} meters from the dropoff point. You must be within 200 meters to mark as delivered.`
+                    distanceToDropoff !== null && distanceToDropoff > 100
+                      ? `You are ${Math.round(distanceToDropoff)} meters from the dropoff point. You must be within 100 meters to mark as delivered.`
                       : updating
                       ? 'Updating...'
                       : 'Mark this delivery as delivered'
@@ -1237,9 +1246,9 @@ const DeliveryDetails = () => {
               )}
             </div>
           )}
-          {delivery.status === 'in_transit' && distanceToDropoff !== null && distanceToDropoff > 200 && (
+          {delivery.status === 'in_transit' && distanceToDropoff !== null && distanceToDropoff > 100 && (
             <div className="mt-3 text-sm text-yellow-700">
-              You are {Math.round(distanceToDropoff)} meters from the dropoff point. You must be within 200 meters to mark as delivered.
+              You are {Math.round(distanceToDropoff)} meters from the dropoff point. You must be within 100 meters to mark as delivered.
             </div>
           )}
         </div>
